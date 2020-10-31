@@ -12,8 +12,14 @@ gem 'tilt', '~> 2.0'
 gem 'erb', '~> 2.2'
 # Ruby code laoder
 gem 'zeitwerk', '~> 2.4'
+# Pattern matching for Ruby
+gem 'dry-matcher', '~> 0.8.3'
+# Set of common monads for Ruby
+gem 'dry-monads', '~> 1.3'
 # HTTP client
 gem 'httparty', '~> 0.18.1'
+# Define schemas for validating JSON code
+gem 'dry-schema', '~> 1.5'
 # Debug Ruby code
 gem 'byebug', '~> 11.1'
 
