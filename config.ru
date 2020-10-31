@@ -5,6 +5,7 @@ Bundler.require(:default)
 
 loader = Zeitwerk::Loader.new
 loader.push_dir("config")
+loader.push_dir("app/services")
 loader.enable_reloading
 loader.setup
 

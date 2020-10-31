@@ -12,3 +12,14 @@ gem 'tilt', '~> 2.0'
 gem 'erb', '~> 2.2'
 # Ruby code laoder
 gem 'zeitwerk', '~> 2.4'
+# HTTP client
+gem 'httparty', '~> 0.18.1'
+# Debug Ruby code
+gem 'byebug', '~> 11.1'
+
+group :development, :test do
+  # Ruby test framework
+  gem 'rspec', '~> 3.10'
+  # Load environment variables from .env file
+  gem 'dotenv', '~> 2.7'
+end
