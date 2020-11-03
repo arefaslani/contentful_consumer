@@ -1,9 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'dotenv'
-
-# Load env variables from .env file
-Dotenv.load(File.expand_path("../.env", __FILE__))
+require 'dotenv/load'
+require 'byebug'
 
 # Require all gems
 Bundler.require(:default)
@@ -11,6 +9,8 @@ Bundler.require(:default)
 # Setup Zeitwerk to autoload classes
 loader = Zeitwerk::Loader.new
 loader.push_dir("app/services")
+loader.push_dir("app/models")
+loader.push_dir("app/normalizers")
 loader.setup
 
 RSpec.configure do |config|

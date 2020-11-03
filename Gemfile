@@ -20,10 +20,14 @@ gem 'dry-monads', '~> 1.3'
 gem 'httparty', '~> 0.18.1'
 # Define schemas for validating JSON code
 gem 'dry-schema', '~> 1.5'
-# Debug Ruby code
-gem 'byebug', '~> 11.1'
+# Map documents to Ruby objects
+gem 'representable', '~> 3.0'
+# Used by representable internally
+gem 'multi_json', '~> 1.15'
 
 group :development, :test do
+  # Debug Ruby code
+  gem 'byebug', '~> 11.1'
   # Ruby test framework
   gem 'rspec', '~> 3.10'
   # Load environment variables from .env file
