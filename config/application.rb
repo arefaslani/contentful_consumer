@@ -3,7 +3,23 @@ class Application < Roda
   
   route do |r|
     r.root do
-      view 'hello'
+      Recipes::FetchList.call(
+        fetcher: ContentfulApi.new,
+        normalizer: EntriesNormalizer
+      ) do |result|
+        result.success do |outcome|
+          @recipes = outcome
+          view 'recipes/index'
+        end
+
+        result.failure(:fetch_failed) do |errors|
+          # Show some error page
+        end
+
+        result.failure do |errors|
+          # Show some error page
+        end
+      end
     end
   end
 end

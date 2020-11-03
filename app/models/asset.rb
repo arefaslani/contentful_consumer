@@ -2,5 +2,6 @@ Asset = Struct.new(
   :id,
   :type,
   :created_at,
-  :url
+  :url,
+  keyword_init: true
 )

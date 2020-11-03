@@ -19,12 +19,6 @@ describe ApplicationService do
         end
       end
 
-      it 'runs the execute method on the interactor class' do
-        expect_any_instance_of(interactor).to receive(:execute).once
-
-        interactor.call
-      end
-
       it 'returns the outcome of the execute method on the interactor class' do
         expect(interactor.call(1)).to eq 1
       end

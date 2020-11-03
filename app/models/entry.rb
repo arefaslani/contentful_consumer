@@ -6,5 +6,6 @@ Entry = Struct.new(
   :description,
   :photo_id,
   :chef_id,
-  :tags_ids
+  :tags_ids,
+  keyword_init: true
 )

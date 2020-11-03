@@ -32,4 +32,8 @@ group :development, :test do
   gem 'rspec', '~> 3.10'
   # Load environment variables from .env file
   gem 'dotenv', '~> 2.7'
+  # Mock http requests
+  gem "webmock", "~> 3.9"
+  # Utility to build dynamic URLs
+  gem "addressable", "~> 2.7"
 end

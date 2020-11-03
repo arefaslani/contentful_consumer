@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'dotenv/load'
-require 'byebug'
+require 'webmock/rspec'
 
 # Require all gems
 Bundler.require(:default)
