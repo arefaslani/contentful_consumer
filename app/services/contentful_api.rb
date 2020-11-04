@@ -5,6 +5,11 @@ class ContentfulApi
   headers 'Authorization' => "Bearer #{ENV.fetch('ACCESS_TOKEN')}"
 
   def entries
-    self.class.get("/spaces/#{ENV.fetch('SPACE_ID')}/environments/#{ENV.fetch('ENVIRONMENT_ID')}/entries")
+    self.class.get(
+      "/spaces/#{ENV.fetch('SPACE_ID')}/environments/#{ENV.fetch('ENVIRONMENT_ID')}/entries",
+      query: {
+        'sys.contentType.sys.id' => 'recipe'
+      }
+    )
   end
 end

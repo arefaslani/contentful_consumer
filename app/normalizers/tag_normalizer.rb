@@ -1,4 +1,4 @@
-class AssetNormalizer < Representable::Decorator
+class TagNormalizer < Representable::Decorator
   include Representable::JSON
 
   nested :sys do
@@ -7,10 +7,8 @@ class AssetNormalizer < Representable::Decorator
   end
 
   nested :fields do
-    nested :file do
-      property :url
-    end
+    property :name
   end
 
-  collection_representer class: Asset
+  collection_representer class: Tag
 end

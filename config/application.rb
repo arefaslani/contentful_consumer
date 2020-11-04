@@ -5,7 +5,7 @@ class Application < Roda
     r.root do
       Recipes::FetchList.call(
         fetcher: ContentfulApi.new,
-        normalizer: EntriesNormalizer
+        normalizer: RecipesNormalizer
       ) do |result|
         result.success do |outcome|
           @recipes = outcome

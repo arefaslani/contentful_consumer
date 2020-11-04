@@ -33,40 +33,6 @@ describe Recipes::FetchList do
                     "id": "kk2bw5ojx476"
                   }
                 },
-                "id": "NysGB8obcaQWmq0aQ6qkC",
-                "type": "Entry",
-                "createdAt": "2018-05-07T13:29:03.514Z",
-                "updatedAt": "2018-05-07T14:19:02.570Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 2,
-                "contentType": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "ContentType",
-                    "id": "chef"
-                  }
-                },
-                "locale": "en-US"
-              },
-              "fields": {
-                "name": "Jony Chives"
-              }
-            },
-            {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "kk2bw5ojx476"
-                  }
-                },
                 "id": "4dT8tcb6ukGSIg2YyuGEOm",
                 "type": "Entry",
                 "createdAt": "2018-05-07T13:38:22.351Z",
@@ -159,43 +125,79 @@ describe Recipes::FetchList do
                 "calories": 900,
                 "description": "Saag paneer is a popular Indian dish with iron-rich spinach and cubes of paneer, an Indian cheese that is firm enough to retain it's shape, but silky-soft on the inside. We have reimagined Saag Paneer and replaced the \"paneer\" with crispy cubes of firm tofu, making this already delicious and nutritious vegetarian dish burst with protein. Toasted pita bread is served alongside as an ode to naan. Cook, relax, and enjoy! [VIDEO](https://www.youtube.com/watch?v=RMzWWwfWdVs)"
               }
-            },  
-            {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "kk2bw5ojx476"
-                  }
-                },
-                "id": "3RvdyqS8408uQQkkeyi26k",
-                "type": "Entry",
-                "createdAt": "2018-05-07T13:28:04.129Z",
-                "updatedAt": "2018-05-07T13:28:04.129Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "contentType": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "ContentType",
-                    "id": "tag"
-                  }
-                },
-                "locale": "en-US"
-              },
-              "fields": {
-                "name": "nuts free"
-              }
             }
           ],
           "includes": {
+            "Entry": [
+              {
+                "sys": {
+                  "space": {
+                    "sys": {
+                      "type": "Link",
+                      "linkType": "Space",
+                      "id": "kk2bw5ojx476"
+                    }
+                  },
+                  "id": "NysGB8obcaQWmq0aQ6qkC",
+                  "type": "Entry",
+                  "createdAt": "2018-05-07T13:29:03.514Z",
+                  "updatedAt": "2018-05-07T14:19:02.570Z",
+                  "environment": {
+                    "sys": {
+                      "id": "master",
+                      "type": "Link",
+                      "linkType": "Environment"
+                    }
+                  },
+                  "revision": 2,
+                  "contentType": {
+                    "sys": {
+                      "type": "Link",
+                      "linkType": "ContentType",
+                      "id": "chef"
+                    }
+                  },
+                  "locale": "en-US"
+                },
+                "fields": {
+                  "name": "Jony Chives"
+                }
+              },
+              {
+                "sys": {
+                  "space": {
+                    "sys": {
+                      "type": "Link",
+                      "linkType": "Space",
+                      "id": "kk2bw5ojx476"
+                    }
+                  },
+                  "id": "3RvdyqS8408uQQkkeyi26k",
+                  "type": "Entry",
+                  "createdAt": "2018-05-07T13:28:04.129Z",
+                  "updatedAt": "2018-05-07T13:28:04.129Z",
+                  "environment": {
+                    "sys": {
+                      "id": "master",
+                      "type": "Link",
+                      "linkType": "Environment"
+                    }
+                  },
+                  "revision": 1,
+                  "contentType": {
+                    "sys": {
+                      "type": "Link",
+                      "linkType": "ContentType",
+                      "id": "tag"
+                    }
+                  },
+                  "locale": "en-US"
+                },
+                "fields": {
+                  "name": "nuts free"
+                }
+              }
+            ],
             "Asset": [
               {
                 "sys": {
@@ -283,7 +285,7 @@ describe Recipes::FetchList do
       subject do
         described_class.call(
           fetcher: ContentfulApi.new,
-          normalizer: EntriesNormalizer
+          normalizer: RecipesNormalizer
         )
       end
 
@@ -293,6 +295,7 @@ describe Recipes::FetchList do
         )
 
         stub_request(:get, uri)
+          .with(query: { 'sys.contentType.sys.id' => 'recipe' })
           .to_return(body: json_response)
       end
 
@@ -305,7 +308,7 @@ describe Recipes::FetchList do
           described_class
             .call(
               fetcher: ContentfulApi.new,
-              normalizer: EntriesNormalizer
+              normalizer: RecipesNormalizer
             )
             .success
         end

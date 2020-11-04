@@ -49,10 +49,6 @@ describe AssetNormalizer do
       expect(subject.id).to eq '3TJp6aDAcMw6yMiE82Oy0K'
     end
 
-    it 'fills in type' do
-      expect(subject.type).to eq 'Asset'
-    end
-
     it 'fills in created_at' do
       expect(subject.created_at).to eq '2018-05-07T13:30:06.967Z'
     end

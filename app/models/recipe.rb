@@ -2,7 +2,7 @@ Recipe = Struct.new(
   :id,
   :title,
   :description,
-  :photo_url,
+  :asset,
   :chef,
   :tags,
   keyword_init: true

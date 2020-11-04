@@ -1,4 +1,4 @@
-describe EntriesNormalizer do
+describe RecipesNormalizer do
   context 'given valid JSON of entries' do
     let(:json) {
       {
@@ -9,40 +9,6 @@ describe EntriesNormalizer do
         "skip": 0,
         "limit": 100,
         "items": [
-          {
-            "sys": {
-              "space": {
-                "sys": {
-                  "type": "Link",
-                  "linkType": "Space",
-                  "id": "kk2bw5ojx476"
-                }
-              },
-              "id": "NysGB8obcaQWmq0aQ6qkC",
-              "type": "Entry",
-              "createdAt": "2018-05-07T13:29:03.514Z",
-              "updatedAt": "2018-05-07T14:19:02.570Z",
-              "environment": {
-                "sys": {
-                  "id": "master",
-                  "type": "Link",
-                  "linkType": "Environment"
-                }
-              },
-              "revision": 2,
-              "contentType": {
-                "sys": {
-                  "type": "Link",
-                  "linkType": "ContentType",
-                  "id": "chef"
-                }
-              },
-              "locale": "en-US"
-            },
-            "fields": {
-              "name": "Jony Chives"
-            }
-          },
           {
             "sys": {
               "space": {
@@ -144,43 +110,79 @@ describe EntriesNormalizer do
               "calories": 900,
               "description": "Saag paneer is a popular Indian dish with iron-rich spinach and cubes of paneer, an Indian cheese that is firm enough to retain it's shape, but silky-soft on the inside. We have reimagined Saag Paneer and replaced the \"paneer\" with crispy cubes of firm tofu, making this already delicious and nutritious vegetarian dish burst with protein. Toasted pita bread is served alongside as an ode to naan. Cook, relax, and enjoy! [VIDEO](https://www.youtube.com/watch?v=RMzWWwfWdVs)"
             }
-          },  
-          {
-            "sys": {
-              "space": {
-                "sys": {
-                  "type": "Link",
-                  "linkType": "Space",
-                  "id": "kk2bw5ojx476"
-                }
-              },
-              "id": "3RvdyqS8408uQQkkeyi26k",
-              "type": "Entry",
-              "createdAt": "2018-05-07T13:28:04.129Z",
-              "updatedAt": "2018-05-07T13:28:04.129Z",
-              "environment": {
-                "sys": {
-                  "id": "master",
-                  "type": "Link",
-                  "linkType": "Environment"
-                }
-              },
-              "revision": 1,
-              "contentType": {
-                "sys": {
-                  "type": "Link",
-                  "linkType": "ContentType",
-                  "id": "tag"
-                }
-              },
-              "locale": "en-US"
-            },
-            "fields": {
-              "name": "nuts free"
-            }
           }
         ],
         "includes": {
+          "Entry": [
+            {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "kk2bw5ojx476"
+                  }
+                },
+                "id": "NysGB8obcaQWmq0aQ6qkC",
+                "type": "Entry",
+                "createdAt": "2018-05-07T13:29:03.514Z",
+                "updatedAt": "2018-05-07T14:19:02.570Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 2,
+                "contentType": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "ContentType",
+                    "id": "chef"
+                  }
+                },
+                "locale": "en-US"
+              },
+              "fields": {
+                "name": "Jony Chives"
+              }
+            },
+            {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "kk2bw5ojx476"
+                  }
+                },
+                "id": "3RvdyqS8408uQQkkeyi26k",
+                "type": "Entry",
+                "createdAt": "2018-05-07T13:28:04.129Z",
+                "updatedAt": "2018-05-07T13:28:04.129Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "contentType": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "ContentType",
+                    "id": "tag"
+                  }
+                },
+                "locale": "en-US"
+              },
+              "fields": {
+                "name": "nuts free"
+              }
+            }
+          ],
           "Asset": [
             {
               "sys": {
@@ -269,24 +271,35 @@ describe EntriesNormalizer do
       subject { described_class.parse(json) }
 
       describe 'response' do
-        it 'responds to entries' do
-          expect(subject).to respond_to :entries
-        end
-  
-        it 'responds to assets' do
-          expect(subject).to respond_to :assets
+        it 'returns entry objects for each entry in the response' do
+          expect(described_class.parse(json)).to all(be_instance_of(Recipe))
         end
 
-        describe '#entries' do
-          it 'returns entry objects for each entry in the response' do
-            expect(described_class.parse(json).entries).to all(be_instance_of(Entry))
-          end
+        it 'parses chef entries to objects' do
+          expect(
+            described_class
+              .parse(json)
+              .find { |recipe| recipe.id == "4dT8tcb6ukGSIg2YyuGEOm" }
+              .chef
+          ).to be_instance_of Chef
         end
 
-        describe '#assets' do
-          it 'returns asset objects for each included asset in the response' do
-            expect(described_class.parse(json).assets).to all(be_instance_of(Asset))
-          end
+        it 'parses tag entries to objects' do
+          expect(
+            described_class
+              .parse(json)
+              .find { |recipe| recipe.id == "4dT8tcb6ukGSIg2YyuGEOm" }
+              .tags
+          ).to all(be_instance_of(Tag))
+        end
+
+        it 'parses asset entries to objects' do
+          expect(
+            described_class
+              .parse(json)
+              .find { |recipe| recipe.id == "4dT8tcb6ukGSIg2YyuGEOm" }
+              .asset
+          ).to be_instance_of(Asset)
         end
       end
     end

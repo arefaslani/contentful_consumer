@@ -20,28 +20,8 @@ module Recipes
       response = fetcher.entries
       
       return Failure(:fetch_failed) if response.code != 200
-
-      parsed_entries = normalizer.parse(response.body).entries
-      parsed_assets = normalizer.parse(response.body).assets
       
-      Success(aggregate_data(parsed_entries, parsed_assets))
-    end
-
-    def aggregate_data(entries, assets)
-      recipes = entries.select { |entry| entry.type == 'recipe' }
-      tags = entries.select { |entry| entry.type == 'tag' }
-      chefs = entries.select { |entry| entry.type == 'chef' }
-      
-      recipes.map do |recipe|
-        Recipe.new(
-          id: recipe.id,
-          photo_url: assets.find { |asset| asset.id == recipe.photo_id }.url,
-          title: recipe.title,
-          description: recipe.description,
-          chef: chefs.find { |chef| chef.id == recipe.chef_id },
-          tags: tags.select { |tag| recipe.tags_ids.include?(tag.id) },
-        )
-      end
+      Success(normalizer.parse(response.body))
     end
   end
 end
