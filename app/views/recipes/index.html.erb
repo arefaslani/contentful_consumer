@@ -1,24 +1,14 @@
-<% @recipes.each do |recipe| %>
-<div class="card mb-3">
-  <div class="row no-gutters">
-    <div class="col-md-4">
-      <img src=<%= recipe.asset.url %> class="card-img" alt="recipe photo">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <a href="/<%= recipe.id %>">
-          <h5 class="card-title">
-            <%= recipe.title %>
-          </h5>
-        </a>
-        <p class="card-text">
-          <%= recipe.description %>
-        </p>
-        <h6 class="card-subtitle mb-2 text-muted">
-          <%= recipe.chef&.name || "Chef not specified" %>
-        </h6>
-      </div>
+<div class="recipe-list">
+  <% @recipes.each do |recipe| %>
+  <div class="card recipe-list-item" style="width: 18rem;">
+    <img src=<%= recipe.asset.url %> class="card-img" alt="recipe photo">
+    <div class="card-body">
+      <a href="/recipes/<%= recipe.id %>">
+        <h5 class="card-title">
+          <%= recipe.title %>
+        </h5>
+      </a>
     </div>
   </div>
+  <% end %>
 </div>
-<% end %>

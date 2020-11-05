@@ -9,18 +9,26 @@ class RecipesNormalizer < Representable::Decorator
           chef: options
             .fetch(:doc)
             .dig('includes', 'Entry')
-            .find do |entry|
-              entry.dig('sys', 'contentType', 'sys', 'id') == 'chef' &&
-                entry.dig('sys', 'id') == recipe.dig('fields', 'chef', 'sys', 'id')
+            .yield_self do |arr|
+              next nil unless arr
+
+              arr.find do |entry|
+                entry.dig('sys', 'contentType', 'sys', 'id') == 'chef' &&
+                  entry.dig('sys', 'id') == recipe.dig('fields', 'chef', 'sys', 'id')
+              end
             end,
           tags: options
             .fetch(:doc)
             .dig('includes', 'Entry')
-            .select do |entry|
-              entry.dig('sys', 'contentType', 'sys', 'id') == 'tag' &&
-                (recipe.dig('fields', 'tags') || [])
-                  .map { |tag| tag.dig('sys', 'id') }
-                  .include?(entry.dig('sys', 'id'))
+            .yield_self do |arr|
+              next nil unless arr
+
+              arr.select do |entry|
+                entry.dig('sys', 'contentType', 'sys', 'id') == 'tag' &&
+                  (recipe.dig('fields', 'tags') || [])
+                    .map { |tag| tag.dig('sys', 'id') }
+                    .include?(entry.dig('sys', 'id'))
+              end
             end,
           asset: options
             .fetch(:doc)

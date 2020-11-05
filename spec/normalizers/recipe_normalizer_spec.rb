@@ -140,8 +140,12 @@ describe RecipeNormalizer do
       },
     }.to_json
   }
-  
+
   subject { described_class.represent(Recipe.new).from_json(json) }
+
+  it 'returns a recipe object' do
+    expect(subject).to be_instance_of Recipe
+  end
   
   it 'fills in id' do
     expect(subject.id).to eq '4dT8tcb6ukGSIg2YyuGEOm'

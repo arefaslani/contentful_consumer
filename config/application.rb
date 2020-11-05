@@ -21,5 +21,24 @@ class Application < Roda
         end
       end
     end
+
+    r.is 'recipes', String do |recipe_id|
+      r.get do
+        Recipes::Fetch.call(
+          fetcher: ContentfulApi.new,
+          normalizer: RecipesNormalizer,
+          id: recipe_id
+        ) do |result|
+          result.success do |outcome|
+            @recipe = outcome
+            view 'recipes/show'
+          end
+
+          result.failure do |errors|
+            # Show some error page
+          end
+        end
+      end
+    end
   end
 end

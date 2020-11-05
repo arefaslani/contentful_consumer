@@ -1,4 +1,4 @@
-describe Recipes::FetchList do
+describe Recipes::Fetch do
   it 'responds to call method' do
     expect(described_class).to respond_to :call
   end
@@ -8,14 +8,19 @@ describe Recipes::FetchList do
       expect(described_class.call).to be_failure
       expect(described_class.call.failure).to have_key(:fetcher)
     end
-  
+
     it 'is invalid without normalizer param' do
       expect(described_class.call).to be_failure
       expect(described_class.call.failure).to have_key(:normalizer)
     end
 
+    it 'is invalid without id param' do
+      expect(described_class.call).to be_failure
+      expect(described_class.call.failure).to have_key(:id)
+    end
+
     context 'with valid params' do
-      let(:json_response) {
+      let(:json_response) do
         {
           "sys": {
             "type": "Array"
@@ -81,49 +86,6 @@ describe Recipes::FetchList do
                     }
                   }
                 ]
-              }
-            },
-            {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "kk2bw5ojx476"
-                  }
-                },
-                "id": "5jy9hcMeEgQ4maKGqIOYW6",
-                "type": "Entry",
-                "createdAt": "2018-05-07T13:40:27.932Z",
-                "updatedAt": "2018-05-07T13:40:27.932Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "contentType": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "ContentType",
-                    "id": "recipe"
-                  }
-                },
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "Tofu Saag Paneer with Buttery Toasted Pita",
-                "photo": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Asset",
-                    "id": "48S44TRZN626y4Wy4CuOmA"
-                  }
-                },
-                "calories": 900,
-                "description": "Saag paneer is a popular Indian dish with iron-rich spinach and cubes of paneer, an Indian cheese that is firm enough to retain it's shape, but silky-soft on the inside. We have reimagined Saag Paneer and replaced the \"paneer\" with crispy cubes of firm tofu, making this already delicious and nutritious vegetarian dish burst with protein. Toasted pita bread is served alongside as an ode to naan. Cook, relax, and enjoy! [VIDEO](https://www.youtube.com/watch?v=RMzWWwfWdVs)"
               }
             }
           ],
@@ -208,45 +170,6 @@ describe Recipes::FetchList do
                       "id": "kk2bw5ojx476"
                     }
                   },
-                  "id": "48S44TRZN626y4Wy4CuOmA",
-                  "type": "Asset",
-                  "createdAt": "2018-05-07T13:39:06.171Z",
-                  "updatedAt": "2018-05-07T13:39:06.171Z",
-                  "environment": {
-                    "sys": {
-                      "id": "master",
-                      "type": "Link",
-                      "linkType": "Environment"
-                    }
-                  },
-                  "revision": 1,
-                  "locale": "en-US"
-                },
-                "fields": {
-                  "title": "SKU1498 Hero 154 2 -adb6124909b48c69f869afecb78b6808-2",
-                  "file": {
-                    "url": "//images.ctfassets.net/kk2bw5ojx476/48S44TRZN626y4Wy4CuOmA/9c0a510bc3d18dda9318c6bf49fac327/SKU1498_Hero_154__2_-adb6124909b48c69f869afecb78b6808-2.jpg",
-                    "details": {
-                      "size": 218803,
-                      "image": {
-                        "width": 1020,
-                        "height": 680
-                      }
-                    },
-                    "fileName": "SKU1498_Hero_154__2_-adb6124909b48c69f869afecb78b6808-2.jpg",
-                    "contentType": "image/jpeg"
-                  }
-                }
-              },
-              {
-                "sys": {
-                  "space": {
-                    "sys": {
-                      "type": "Link",
-                      "linkType": "Space",
-                      "id": "kk2bw5ojx476"
-                    }
-                  },
                   "id": "61XHcqOBFYAYCGsKugoMYK",
                   "type": "Asset",
                   "createdAt": "2018-05-07T13:37:53.784Z",
@@ -280,13 +203,6 @@ describe Recipes::FetchList do
             ]
           }
         }.to_json
-      }
-
-      subject do
-        described_class.call(
-          fetcher: ContentfulApi.new,
-          normalizer: RecipesNormalizer
-        )
       end
 
       before do
@@ -295,8 +211,16 @@ describe Recipes::FetchList do
         )
 
         stub_request(:get, uri)
-          .with(query: { 'sys.contentType.sys.id' => 'recipe' })
+          .with(query: { 'sys.contentType.sys.id' => 'recipe', 'sys.id' => '4dT8tcb6ukGSIg2YyuGEOm' })
           .to_return(body: json_response)
+      end
+      
+      subject do
+        described_class.call(
+          fetcher: ContentfulApi.new,
+          normalizer: RecipesNormalizer,
+          id: '4dT8tcb6ukGSIg2YyuGEOm'
+        )
       end
 
       it 'returns a success response' do
@@ -304,18 +228,8 @@ describe Recipes::FetchList do
       end
 
       describe '#success' do
-        subject do
-          described_class
-            .call(
-              fetcher: ContentfulApi.new,
-              normalizer: RecipesNormalizer
-            )
-            .success
-        end
-
-        it 'returns recipe entries' do
-          expect(subject).to all(be_a(Recipe))
-          expect(subject.count).to eq 2
+        it 'returns a recipe object' do
+          expect(subject.success).to be_a(Recipe)
         end
       end
     end
